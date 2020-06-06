@@ -12,14 +12,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class TextSorting {
-    public TextSorting() {
-    }
-    
     public static void main (String[] args) {
-        if (!commandArgsIsOk(args)) {
-            System.out.println("Wrong command argument");
-            System.exit(1);
-        }
+        commandArgsIsOk(args);
         
         ArrayList<String> strs = getTextFromFile(args[1]);
         HashMap<String, Integer> stringCount = countEqualStrings(strs);
@@ -33,40 +27,33 @@ public class TextSorting {
                 break;
             case "3":
                 int wordNumber = Integer.parseInt(args[3]) - 1;
-                for (String s: strs)
+                for (String s: strs) {
                     if (s.split(" ").length <= wordNumber) {
-                        System.out.println("Wrong argument: " + args[3]);
-                        System.exit(1);
+                        throw new IllegalArgumentException("Wrong argument: " + args[3]);
                     }
+                }
                 if (wordNumber < 0) {
-                    System.out.println("Wrong argument: " + args[3]);
-                    System.exit(1);
+                    throw new IllegalArgumentException("Wrong argument: " + args[3]);
                 }
                 sortByWord(strs, wordNumber);
         }
         writeToFile(strs, stringCount, args[0]);
     }
     
-    public static boolean commandArgsIsOk (String[] args) {
+    public static void commandArgsIsOk (String[] args) {
         if ((args.length != 3) && (args.length != 4)) {
-            System.out.println("Wrong number of command arguments");
-            System.exit(1);
+            throw new IllegalArgumentException("Wrong number of command arguments");
         }
         else {
-            try {
-                if (args[2].equals("3")) {
-                    Integer.parseInt(args[3]);
-                    return (args.length == 4);
-                }
-                else if ((args[2].equals("1")) || (args[2].equals("2")))
-                    return (args.length == 3);
+            if (args[2].equals("3")) {
+                Integer.parseInt(args[3]);
+                if (args.length != 4)
+                    throw new IllegalArgumentException("Wrong number of command arguments");
             }
-            catch (NumberFormatException e) {
-                System.out.println("Wrong type of argument");
-                System.exit(1);
-            }
+            else if ((args[2].equals("1")) || (args[2].equals("2")))
+                if (args.length != 3)
+                    throw new IllegalArgumentException("Wrong number of command arguments");
         }
-        return false;
     }
     
     public static ArrayList<String> getTextFromFile (String inputFileName) {
@@ -96,7 +83,7 @@ public class TextSorting {
     }
     
     public static void sortByAlpha(ArrayList<String> strs) {
-            Collections.sort(strs);
+        Collections.sort(strs);
     }
     
     public static void sortBySumbolNumber(ArrayList<String> strs) {
@@ -114,11 +101,11 @@ public class TextSorting {
     
     public static void writeToFile (ArrayList<String> strs, HashMap<String, Integer> stringCount, String outputFileName) {
         try {
-              FileWriter myWriter = new FileWriter(outputFileName);
+            FileWriter myWriter = new FileWriter(outputFileName);
             for (String s: strs) {
                 myWriter.write(s + " " + stringCount.get(s) + '\n');
             }
-              myWriter.close();
+            myWriter.close();
         }
         catch (IOException e) {
               System.out.println("An error occurred");
