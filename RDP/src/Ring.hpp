@@ -15,6 +15,6 @@ private:
     size_t size_limit;
     size_t cur_size;
     size_t first;
-    int last;
+    size_t last;
     int* data;
 };

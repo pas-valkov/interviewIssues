@@ -2,7 +2,7 @@
 #include "Ring.hpp"
 
 
-Ring::Ring(size_t size) : size_limit(size), cur_size(0), first(0), last(-1) {
+Ring::Ring(size_t size) : size_limit(size), cur_size(0), first(0), last(0) {
     data = new int[size_limit];
 }
 
@@ -15,8 +15,9 @@ bool Ring::Add(int val) {
         return false;
     }
 
-    last = (last + 1 == size_limit) ? 0 : last + 1;;
+    last = last % size_limit;
     data[last] = val;
+    last++;
     cur_size++;
 
     return true;
@@ -42,7 +43,7 @@ size_t Ring::Size() {
 void Ring::Check() {
     if (cur_size != 0) {
         if (first <= last) {
-            for (int i = first; i < last + 1; ++i) {
+            for (int i = first; i < last; ++i) {
                 std::cout << data[i] << " ";
             }
         }
@@ -50,7 +51,7 @@ void Ring::Check() {
             for (int i = first; i < size_limit; ++i) {
                 std::cout << data[i] << " ";
             }
-            for (int i = 0; i < last + 1; ++i) {
+            for (int i = 0; i < last; ++i) {
                 std::cout << data[i] << " ";
             }
         }
